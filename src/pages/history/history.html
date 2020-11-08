@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>History</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-item *ngFor="let item of historyList">
+    <ion-row>
+      <ion-col>Reference No </ion-col>
+      <ion-col auto>:</ion-col> 
+      <ion-col text-left>{{item.refNo}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Trx Date Time</ion-col>
+      <ion-col auto>:</ion-col> 
+      <ion-col text-left>{{item.createdOn}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Exchange Rate</ion-col>
+      <ion-col auto>:</ion-col> 
+      <ion-col text-left>{{item.rate}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>You paid </ion-col>
+      <ion-col>{{item.fromCur}}{{item.payAmount}}</ion-col>
+      <ion-col>You get </ion-col>
+      <ion-col>{{item.toCur}}{{item.receiveAmount}}</ion-col>
+    </ion-row>
+  </ion-item>
+</ion-content>

@@ -1,35 +1,17 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>{{ 'LIST_MASTER_TITLE' | translate }}</ion-title>
-
-    <ion-buttons end>
-      <button ion-button icon-only (click)="addItem()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-buttons>
+    <ion-title>Your balance</ion-title>
   </ion-navbar>
-
 </ion-header>
-
 <ion-content>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let item of currentItems">
-      <button ion-item (click)="openItem(item)">
-        <ion-avatar item-start>
-          <img [src]="item.profilePic" />
-        </ion-avatar>
-        <h2>{{item.name}}</h2>
-        <p>{{item.about}}</p>
-        <ion-note item-end *ngIf="item.note">{{item.note}}</ion-note>
-      </button>
-
-      <ion-item-options>
-        <button ion-button color="danger" (click)="deleteItem(item)">
-          {{ 'DELETE_BUTTON' | translate }}
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
+    <ion-item *ngFor="let item of currency">
+        <!-- <ion-avatar item-start>
+          <span>{{item.symbol}}</span>
+        </ion-avatar> -->
+        <ion-label>{{item.currency}}</ion-label>
+        <ion-label text-right>{{item.amount}}</ion-label>
+    </ion-item>
   </ion-list>
 </ion-content>

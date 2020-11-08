@@ -1,0 +1,50 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Transaction</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <!-- <ion-list>
+    <button ion-item (click)="openItem(item)" *ngFor="let item of currentItems">
+      <ion-avatar item-start>
+        <img [src]="item.profilePic" />
+      </ion-avatar>
+      <h2>{{item.name}}</h2>
+      <p>{{item.about}}</p>
+      <ion-note item-end *ngIf="item.note">{{item.note}}</ion-note>
+    </button>
+  </ion-list> -->
+  <ion-item>
+    <ion-label>From Currency</ion-label>
+    <ion-select [(ngModel)]="fromCurrency" (ionChange)="onChangeFromCur()">
+      <ion-option *ngFor="let cur of fromCurrencyList" [value]="cur">{{cur.currency}} {{cur.balance}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>To Currency</ion-label>
+    <ion-select [(ngModel)]="toCurrency" (ionChange)="onChangeToCur()">
+      <ion-option *ngFor="let cur of toCurrencyList" [value]="cur">{{cur.currency}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Exchange Rate</ion-label> <ion-label text-right>{{rate.rate}}</ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>You Pay ({{fromCurrency.currency}})</ion-label>
+    <ion-input text-right type='number'[(ngModel)]="payAmount" (ionChange)="calculateReceiveAmount()"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>You Get ({{toCurrency.currency}}) </ion-label>
+    <ion-input text-right type='number'[(ngModel)]="receiveAmount" disabled></ion-input>
+  </ion-item>
+
+  <button ion-button block (click)="performTrans()" [disabled]='isButtonDisable'>Confirm</button>
+</ion-content>

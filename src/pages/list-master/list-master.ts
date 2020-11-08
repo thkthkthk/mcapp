@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController } from 'ionic-angular';
 
-import { Item } from '../../models/item';
-import { Items } from '../../providers';
+import { SqlProvider } from '../../providers/sql/sql';
+import getSymbolFromCurrency from 'currency-symbol-map'
 
 @IonicPage()
 @Component({
@@ -10,45 +10,26 @@ import { Items } from '../../providers';
   templateUrl: 'list-master.html'
 })
 export class ListMasterPage {
-  currentItems: Item[];
+  currency: any[];
 
-  constructor(public navCtrl: NavController, public items: Items, public modalCtrl: ModalController) {
-    this.currentItems = this.items.query();
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController, public sqlProvider: SqlProvider) {
   }
 
   /**
    * The view loaded, let's query our items for the list
    */
-  ionViewDidLoad() {
-  }
-
-  /**
-   * Prompt the user to add a new item. This shows our ItemCreatePage in a
-   * modal and then adds the new item to our data source if the user created one.
-   */
-  addItem() {
-    let addModal = this.modalCtrl.create('ItemCreatePage');
-    addModal.onDidDismiss(item => {
-      if (item) {
-        this.items.add(item);
+  ionViewWillEnter() {
+    let service = this.sqlProvider;
+    this.currency = [];
+    service.getUserFund(service.loggedInUser.USERID).then((resp:any) => {
+      for (let i = 0; i < resp.rows.length; i++) {
+        console.log(JSON.stringify(resp.rows))
+        console.log(JSON.stringify(resp.rows.item(i)))
+        this.currency.push({'symbol':getSymbolFromCurrency(resp.rows.item(i).CURRENCY),'currency': resp.rows.item(i).CURRENCY,'amount': parseFloat(resp.rows.item(i).AMOUNT).toFixed(4)});
       }
+      service.setupOwnCurrency(this.currency);
+    }).catch((err) => {
+      console.log(err);
     })
-    addModal.present();
-  }
-
-  /**
-   * Delete an item from the list of items.
-   */
-  deleteItem(item) {
-    this.items.delete(item);
-  }
-
-  /**
-   * Navigate to the detail page for this item.
-   */
-  openItem(item: Item) {
-    this.navCtrl.push('ItemDetailPage', {
-      item: item
-    });
   }
 }

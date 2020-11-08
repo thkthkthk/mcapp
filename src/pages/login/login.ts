@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, ToastController } from 'ionic-angular';
 
-import { User } from '../../providers';
 import { MainPage } from '../';
+import { SqlProvider } from '../../providers/sql/sql';
 
 @IonicPage()
 @Component({
@@ -11,40 +11,72 @@ import { MainPage } from '../';
   templateUrl: 'login.html'
 })
 export class LoginPage {
-  // The account fields for the login form.
-  // If you're using the username field with or without email, make
-  // sure to add it to the type
   account: { email: string, password: string } = {
-    email: 'test@example.com',
-    password: 'test'
+    email: '',
+    password: ''
   };
 
   // Our translated text strings
   private loginErrorString: string;
 
   constructor(public navCtrl: NavController,
-    public user: User,
     public toastCtrl: ToastController,
-    public translateService: TranslateService) {
+    public translateService: TranslateService,
+    public sqlProvider: SqlProvider) {
 
     this.translateService.get('LOGIN_ERROR').subscribe((value) => {
       this.loginErrorString = value;
     })
   }
 
-  // Attempt to login in through our User service
+  ngOnInit() {
+    this.sqlProvider.getAllUser().then((res: any) => {
+      console.log(JSON.stringify(res));
+      for (let i = 0; i < res.rows.length; i++) {
+        console.log(JSON.stringify(res.rows))
+        console.log(JSON.stringify(res.rows.item(i)))
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
+
+    this.sqlProvider.getAllUserFund().then((res: any) => {
+      console.log(JSON.stringify(res));
+      for (let i = 0; i < res.rows.length; i++) {
+        console.log(JSON.stringify(res.rows))
+        console.log(JSON.stringify(res.rows.item(i)))
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
+
+    this.sqlProvider.getAllTrxHistory().then((res: any) => {
+      console.log(JSON.stringify(res));
+      for (let i = 0; i < res.rows.length; i++) {
+        console.log(JSON.stringify(res.rows))
+        console.log(JSON.stringify(res.rows.item(i)))
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
+
+  // Attempt to login in through sql provider
   doLogin() {
-    this.user.login(this.account).subscribe((resp) => {
-      this.navCtrl.push(MainPage);
-    }, (err) => {
-      this.navCtrl.push(MainPage);
-      // Unable to log in
-      let toast = this.toastCtrl.create({
-        message: this.loginErrorString,
-        duration: 3000,
-        position: 'top'
-      });
-      toast.present();
+    this.sqlProvider.getUser(this.account.email, this.account.password).then((res: any) => {
+      console.log(JSON.stringify(res));
+      for (let i = 0; i < res.rows.length; i++) {
+        console.log(JSON.stringify(res.rows))
+        console.log(JSON.stringify(res.rows.item(i)))
+      }
+      if (res.rows.length == 1) {
+        this.sqlProvider.loggedIn(res.rows.item(0));
+        this.navCtrl.push(MainPage);
+      } else {
+        alert("Invalid email or password");
+      }
+    }).catch((err) => {
+      console.log(err);
     });
   }
 }

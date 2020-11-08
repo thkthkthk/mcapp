@@ -6,27 +6,14 @@ import { Injectable } from '@angular/core';
  */
 @Injectable()
 export class Api {
-  url: string = 'https://example.com/api/v1';
+  url: string = 'https://openexchangerates.org/api/latest.json?app_id=0431c0385b37484cbaf674ba6aaeb3b0&symbols=USD,AUD,MYR,SGD';
+  //key: string = '0431c0385b37484cbaf674ba6aaeb3b0';
 
   constructor(public http: HttpClient) {
   }
 
-  get(endpoint: string, params?: any, reqOpts?: any) {
-    if (!reqOpts) {
-      reqOpts = {
-        params: new HttpParams()
-      };
-    }
-
-    // Support easy query params for GET requests
-    if (params) {
-      reqOpts.params = new HttpParams();
-      for (let k in params) {
-        reqOpts.params = reqOpts.params.set(k, params[k]);
-      }
-    }
-
-    return this.http.get(this.url + '/' + endpoint, reqOpts);
+  getSupportedCurrencyRate() {
+    return this.http.get(this.url);
   }
 
   post(endpoint: string, body: any, reqOpts?: any) {
